@@ -74,7 +74,7 @@ if __name__ == '__main__':
                 labels[i][j] = 1
     labels = torch.reshape(labels, (attack_ids.size(0)*attack_ids.size(1),))
     labels = ['Original' if lab==0 else 'Adversarial' for lab in labels]
-    print('labels', labels.size())
+    print('labels', len(labels))
 
     # Place into df
     feat_cols = [str(i) for i in range(embeddings.size(1))]
