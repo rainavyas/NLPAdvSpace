@@ -71,7 +71,7 @@ if __name__ == '__main__':
         for j in range(attack_ids.size(1)):
             if attack_ids[i,j] not in original_ids[i,:]:
                 labels[i][j] = 1
-    labels = torch.reshape(labels, (attack_ids.size(0)*attack_ids.size(1)))
+    labels = torch.reshape(labels, (attack_ids.size(0)*attack_ids.size(1),))
     labels = ['Original' if lab==0 else 'Adversarial' for lab in labels]
 
     # Place into df
