@@ -64,6 +64,7 @@ if __name__ == '__main__':
 
     layer_embeddings = handler.get_layern_outputs(attack_ids, attack_mask)
     embeddings = torch.reshape(layer_embeddings, (attack_ids.size(0)*attack_ids.size(1), layer_embeddings.size(-1)))
+    print("Embeddings", embeddings.size())
 
     # Use the ids to identify the adversarial embeddings - assume substituted words not in rest of phrase
     labels = torch.zeros((attack_ids.size(0), attack_ids.size(1)))
@@ -73,10 +74,11 @@ if __name__ == '__main__':
                 labels[i][j] = 1
     labels = torch.reshape(labels, (attack_ids.size(0)*attack_ids.size(1),))
     labels = ['Original' if lab==0 else 'Adversarial' for lab in labels]
+    print('labels', labels.size())
 
     # Place into df
     feat_cols = [str(i) for i in range(embeddings.size(1))]
-    df = pd.DataFrame(embeddings.cpu().detach().numpy(), columns=feat_cols)
+    df = pd.DataFrame(embeddings, columns=feat_cols)
     df['label'] = labels
 
     # Perform t-SNE
