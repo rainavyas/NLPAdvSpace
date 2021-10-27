@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
     # Place into df
     feat_cols = [str(i) for i in range(embeddings.size(1))]
-    df = pd.DataFrame(embeddings, columns=feat_cols)
+    df = pd.DataFrame(embeddings.cpu().detach().numpy(), columns=feat_cols)
     df['label'] = labels
 
     # Perform t-SNE
