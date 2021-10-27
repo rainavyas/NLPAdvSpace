@@ -93,4 +93,4 @@ if __name__ == '__main__':
         legend="full",
         alpha=0.5
     )
-    plt.savefig(f'{args.OUT_PATH}/tsne_layer{args.layer_num}_N{args.N}.png')
+    plt.savefig(f'{args.OUT_DIR}/tsne_layer{args.layer_num}_N{args.N}.png')
