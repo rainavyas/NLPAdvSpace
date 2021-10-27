@@ -24,7 +24,7 @@ if __name__ == '__main__':
     commandLineParser = argparse.ArgumentParser()
     commandLineParser.add_argument('MODEL', type=str, help='trained .th model')
     commandLineParser.add_argument('TEST_DIR', type=str, help='attacked test data base directory')
-    commandLineParser.add_argument('OUT_PATH', type=str, help='Path to save generated T-SNE plot')
+    commandLineParser.add_argument('OUT_DIR', type=str, help='Path to save generated T-SNE plot')
     commandLineParser.add_argument('--layer_num', type=int, default=0, help="BERT layer to analyze")
     commandLineParser.add_argument('--num_points_test', type=int, default=12500, help="number of pairs data points to use test")
     commandLineParser.add_argument('--N', type=int, default=25, help="Num word substitutions used in attack")
@@ -64,7 +64,6 @@ if __name__ == '__main__':
 
     layer_embeddings = handler.get_layern_outputs(attack_ids, attack_mask)
     embeddings = torch.reshape(layer_embeddings, (attack_ids.size(0)*attack_ids.size(1), layer_embeddings.size(-1)))
-    print("Embeddings", embeddings.size())
 
     # Use the ids to identify the adversarial embeddings - assume substituted words not in rest of phrase
     labels = torch.zeros((attack_ids.size(0), attack_ids.size(1)))
@@ -74,7 +73,6 @@ if __name__ == '__main__':
                 labels[i][j] = 1
     labels = torch.reshape(labels, (attack_ids.size(0)*attack_ids.size(1),))
     labels = ['Original' if lab==0 else 'Adversarial' for lab in labels]
-    print('labels', len(labels))
 
     # Place into df
     feat_cols = [str(i) for i in range(embeddings.size(1))]
@@ -83,7 +81,7 @@ if __name__ == '__main__':
 
     # Perform t-SNE
     data = df[feat_cols].values
-    tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=iter)
+    tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=args.iter)
     tsne_results = tsne.fit_transform(data)
 
     plt.figure(figsize=(16,10))
@@ -95,4 +93,4 @@ if __name__ == '__main__':
         legend="full",
         alpha=0.5
     )
-    plt.savefig(args.OUT_PATH)
+    plt.savefig(f'{args.OUT_PATH}/tsne_layer{args.layer_num}_N{args.N}.png')
