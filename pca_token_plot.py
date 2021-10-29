@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
     # Perform PCA
     data = df[feat_cols].values
-    pca = PCA(n_components=2)
+    pca = PCA(n_components=4)
     pca_results = pca.fit_transform(df[feat_cols].values)
 
     df['pca-2d-one'] = pca_results[:,0]
@@ -96,4 +96,19 @@ if __name__ == '__main__':
         legend="full",
         alpha=0.5
     )
-    plt.savefig(f'{args.OUT_DIR}/pca_layer{args.layer_num}_N{args.N}.png')
+    plt.savefig(f'{args.OUT_DIR}/pca_1v2_layer{args.layer_num}_N{args.N}.png')
+    plt.clf()
+
+    df['pca-2d-three'] = pca_results[:,2]
+    df['pca-2d-four'] = pca_results[:,3]
+
+    plt.figure(figsize=(16,10))
+    sns.scatterplot(
+        x="pca-2d-three", y="pca-2d-four",
+        hue="label",
+        palette=sns.color_palette("bright", 2),
+        data=df,
+        legend="full",
+        alpha=0.5
+    )
+    plt.savefig(f'{args.OUT_DIR}/pca_2v3_layer{args.layer_num}_N{args.N}.png')
